@@ -1,0 +1,249 @@
+﻿关于DFS的定义等基本的东西我就不说了~百度吧。
+
+每个人的学习方法不一样，在我的学习中我是把DFS是分了类的，虽然总体思路是一样的，但是不同的应用环境就会应用不同的DFS模型，是的，模型。
+
+下面我把目前博主做过并总结的模型挨着说一下。这篇先说第一种，其他的博主会在后面的DFS系列博文里面说的。（我会加油写的~~）
+
+
+
+直接上题：
+
+
+
+模型一：
+
+1、标题：六角填数 
+
+  
+    如图【1.png】所示六角形中，填入1~12的数字。使得每条直线上的数字之和都相同。
+    图中，已经替你填好了3个数字，请你计算星号位置所代表的数字是多少？
+
+
+
+代码入下：
+
+
+[cpp] view plain copy
+# include <stdio.h>   
+  
+int a[13]={0},v[13]={0};    
+void dfs(int x);  
+void jude(void);  
+  
+int main(void)  
+{  
+    int i;  
+    a[1] = 1;  
+    a[2] = 8;  
+    a[12] = 3;  
+    v[1] = 1;  
+    v[8] = 1;  
+    v[3] = 1;  
+    dfs(1);         
+    return 0;  
+}       
+  
+void dfs(int x)  
+{  
+    int i,b[6];  
+    if(x==1||x==2||x==12)  
+    {  
+        dfs(x+1);  
+        return;  
+    }  
+      
+    if(x==13)   
+        jude();   
+          
+    for(i=1;i<13;i++)      
+        if(v[i]==0)  
+        {     
+            v[i] = 1;     
+            a[x] = i;   
+            dfs(x+1);  
+            v[i] = 0;     
+        }           
+}                
+              
+void jude(void)  
+{  
+    int i,b[6];  
+      
+    b[0]=a[1]+a[3]+a[6]+a[8];   
+    b[1]=a[1]+a[4]+a[7]+a[11];  
+    b[2]=a[2]+a[3]+a[4]+a[5];  
+    b[3]=a[2]+a[6]+a[9]+a[12];  
+    b[4]=a[5]+a[7]+a[10]+a[12];  
+    b[5]=a[8]+a[9]+a[10]+a[11];  
+      
+    for(i=1;i<6;i++)   
+        if(b[i]!=b[i-1])  
+            return;   
+    printf("%d ",a[6]);   
+}  
+2、标题：N皇后问题
+在N*N格的国际象棋上摆放N个皇后，使其不能互相攻击，
+
+即任意两个皇后都不能处于同一行、同一列或同一斜线上，问有多少种摆法。
+
+代码入下：
+
+[cpp] view plain copy
+<span style="font-size:14px;"># include <stdio.h>  
+# include <stdlib.h>  
+# include <math.h>  
+  
+int count = 0,x;  
+int  *a,*v;  
+  
+void dfs(int n);  
+void jude(void);  
+  
+int main(void)  
+{  
+    int i;  
+    scanf("%d",&x);   
+    a = (int *)malloc(sizeof(int)*(x+1));  
+    v = (int *)malloc(sizeof(int)*(x+1));  
+      
+    for(i=0;i<=x;i++)  
+        v[i] = 1;   
+          
+    dfs(1);  
+    printf("%d ",count);  
+    return 0;  
+}   
+void dfs(int n)  
+{  
+    int i;  
+    if(n>x)  
+        jude();  
+    for(i=1;i<=x;i++)   
+        if(v[i])  
+        {  
+            v[i] = 0;  
+            a[n] = i;  
+            dfs(n+1);  
+            v[i] = 1;  
+        }      
+}    
+void jude(void)  
+{  
+    int i,j;   
+    for(i=1;i<=x;i++)    
+        for(j=1;j<i;j++)   
+            if(abs(j-i)==abs(a[j]-a[i]))  
+                return ;    
+    count++;  
+}</span>  
+
+
+3、标题：带分数
+
+ 100 可以表示为带分数的形式：100 = 3 + 69258 / 714 ， 还可以表示为：100 = 82 + 3546 / 197 
+   注意特征：带分数中，数字1~9分别出现且只出现一次（不包含0）。 
+    类似这样的带分数，100 有 11 种表示法。  
+题目要求：
+从标准输入读入一个正整数N (N<1000*1000)
+程序输出该数字用数码1~9不重复不遗漏地组成带分数表示的全部种数。
+注意：不要求输出每个表示，只统计有多少表示法！
+
+代码入下：
+
+
+[cpp] view plain copy
+# include <stdio.h>   
+  
+int count = 0,p;  
+int a[10],v[10]={0};  
+  
+void dfs(int n);  
+void jude(void);  
+int sum(int x,int y);  
+  
+int main(void)  
+{  
+    scanf("%d",&p);  
+    dfs(1);  
+    printf("%d ",count);  
+      
+    return 0;  
+}     
+  
+void dfs(int n)  
+{  
+    int i;   
+      
+    if(n>9)  
+        jude();  
+          
+    for(i=1;i<10;i++)  
+    {  
+        if(!v[i])  
+        {  
+            v[i] = 1;  
+            a[n] = i;  
+            dfs(n+1);    
+            v[i] = 0;  
+        }  
+    }   
+}  
+  
+void jude(void)  
+{  
+    int x,y,z;  
+    int i,j;  
+      
+    for(i=0;i<8;i++)   
+        for(j=i+1;j<9;j++)  
+        {  
+            x = sum(1,i);  
+            y = sum(i+1,j);  
+            z = sum(j+1,9);   
+            if((p-x)*z==y)  
+                count++;  
+        }  
+}  
+  
+int sum(int x,int y)  
+{  
+    int s = 0;  
+      
+    if(y==0)  
+        return 0;  
+          
+    for(x;x<=y;x++)  
+    {  
+        s = s*10+a[x];  
+    }  
+    return s;  
+}  
+
+
+为什么这三个是一个模型呢？不知道大家有没有发现，这三个题都有一段大致相的DFS函数代码，那就是
+
+
+[cpp] view plain copy
+void dfs(int n)  
+{  
+    int i;  
+    if(n>x)  
+    jude();  
+    for(i=1;i<=x;i++)   
+        if(v[i])  
+        {  
+            v[i] = 0;  
+            a[n] = i;  
+            dfs(n+1);   
+            v[i] = 1;  
+          }   
+}    
+
+
+这个函数做的就是把每一种情况列举一次，再用jude函数筛选，是不是和穷举有点相似？没错就是穷举思想，只是效率会高很多，谁都不希望
+
+程序run到地老天荒吧，我只说模型，具体代码怎么理解的还是要自己去看啦，建议你可以自己模拟一下程序过程就ok啦。
+
+这种模型呢适合的题目是这样的：给你一个图让你填不重复的数。 
+
+有什么好的补充以及建议大家给我说一下，我很乐意与各位交流。
