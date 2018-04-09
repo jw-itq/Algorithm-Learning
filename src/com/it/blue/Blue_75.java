@@ -29,15 +29,17 @@ public class Blue_75 {
 			System.out.println(m);
 			return;
 		}
-		if(m < n){
+		//其实不用交换位置的，为什么呢，因为你看就算是一个小数跟大数取模，经过这样的交换
+		//他们两个还是交换过来了，只是多了一个步而已，先找到主要规律，最后剪枝
+		/*if(m < n){
 			int t = m;
 			m = n;
 			n = t;
-		}
+		}*/
 		gcd(n,m%n);
 	}
 	public static void main(String[] args) {
 //		hanNoi(3, 'A', 'B', 'C');
-		gcd(36,24);
+		gcd(24,36);
 	}
 }
